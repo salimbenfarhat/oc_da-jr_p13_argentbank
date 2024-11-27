@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { fetchUserThunk } from '../thunks/userProfileThunk';
 
 // État initial du slice de profil utilisateur.
 // firstName et lastName : contiennent les informations du prénom et du nom de l'utilisateur (null initialement).
@@ -16,6 +17,27 @@ const userProfileSlice = createSlice({
   name: 'userProfile', // Nom du slice
   initialState, // État initial
   reducers: {}, // Pas de reducers synchrones pour ce slice
+  extraReducers: (builder) => {
+    // Gestion des états pour les actions asynchrones (thunks)
+    builder
+      .addCase(fetchUserThunk.pending, (state) => {
+        // Lorsque le thunk fetchUserThunk commence
+        state.status = 'loading';
+        state.error = null; // Réinitialisation de l'erreur
+      })
+      .addCase(fetchUserThunk.fulfilled, (state, action) => {
+        // Lorsque le thunk fetchUserThunk réussit
+        state.status = 'succeeded';
+        state.firstName = action.payload.body.firstName;
+        state.lastName = action.payload.body.lastName;
+        state.error = null;
+      })
+      .addCase(fetchUserThunk.rejected, (state, action) => {
+        // Lorsque le thunk fetchUserThunk échoue
+        state.status = 'failed';
+        state.error = action.error.message; // Récupérer le message d'erreur
+      });
+  },
 });
 
 // Export du reducer du slice
