@@ -3,10 +3,11 @@
 // Initialise le routeur et le store Redux, puis rend le composant principal.
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Provider } from 'react-redux'; // Importation du Provider
+import { Provider, useSelector } from 'react-redux'; // Importation du Provider
 import {
   createBrowserRouter,
   RouterProvider,
+  Navigate,
   useNavigate
 } from "react-router-dom";
 
@@ -17,7 +18,18 @@ import Login from './pages/Login';
 import Error from './components/Error';
 
 import store from './redux/store'; // Importation de votre store Redux
+import PropTypes from 'prop-types';
 import reportWebVitals from './reportWebVitals';
+
+// Composant de route protégée
+const PrivateRoute = ({ children }) => {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  return isAuthenticated ? children : <Navigate to='/login' />;
+};
+
+PrivateRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 // Composant de fonction React pour la redirection après la connexion
 const HandleLogin = () => {
