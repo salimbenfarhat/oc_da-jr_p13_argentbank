@@ -70,6 +70,7 @@ paths:
           name: Authorization
           description: Attach Bearer JWT token
           required: true
+          type: string
       produces:
         - application/json
       responses:
@@ -93,6 +94,7 @@ paths:
           name: Authorization
           description: Attach Bearer JWT token
           required: true
+          type: string
         - in: body
           name: body
           description: Update user profile attributes
@@ -108,6 +110,136 @@ paths:
             $ref: '#/definitions/ApiResponse'
         '400':
           description: Invalid Fields
+        '500':
+          description: Internal Server Error
+  /user/{accountId}/transactions:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Get all transactions for an account for the current month
+      description: API for fetching all transactions for a specific account for the current month
+      parameters:
+        - in: path
+          name: accountId
+          description: Account ID
+          required: true
+          type: string
+        - in: query
+          name: month
+          type: string
+          description: The current month for which transactions are fetched, formatted as MM-YYYY.
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Transactions retrieved successfully
+          schema:
+            $ref: '#/definitions/TransactionsResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: Account not found
+        '500':
+          description: Internal Server Error
+  /user/{accountId}/transactions/{transactionId}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Get transaction details
+      description: API for fetching details of a specific transaction
+      parameters:
+        - in: path
+          name: accountId
+          description: Account ID
+          required: true
+          type: string
+        - in: path
+          name: transactionId
+          description: Transaction ID
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Transaction details retrieved successfully
+          schema:
+            $ref: '#/definitions/TransactionDetails'
+        '400':
+          description: Invalid request
+        '404':
+          description: Transaction not found
+        '500':
+          description: Internal Server Error
+    put:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Update transaction details
+      description: API for updating transaction details
+      parameters:
+        - in: path
+          name: accountId
+          description: Account ID
+          required: true
+          type: string
+        - in: path
+          name: transactionId
+          description: Transaction ID
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Updated transaction details
+          required: true
+          schema:
+            $ref: '#/definitions/Transaction'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Transaction details updated successfully
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: Transaction not found
+        '500':
+          description: Internal Server Error
+    delete:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Delete transaction details
+      description: API for deleting transaction details
+      parameters:
+        - in: path
+          name: accountId
+          description: Account ID
+          required: true
+          type: string
+        - in: path
+          name: transactionId
+          description: Transaction ID
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '204':
+          description: Transaction details deleted successfully
+        '400':
+          description: Invalid request
+        '404':
+          description: Transaction not found
         '500':
           description: Internal Server Error
 securityDefinitions:
@@ -164,3 +296,59 @@ definitions:
         type: string
       lastName:
         type: string
+  Transaction:
+    type: object
+    properties:
+      description:
+        type: string
+      category:
+        type: string
+      amount:
+        type: number
+        format: float
+      balance:
+        type: number
+        format: float
+      accountId:
+        type: string
+      transactionType:
+        type: string
+      notes:
+        type: string
+  TransactionsResponse:
+    type: object
+    properties:
+      transactions:
+        type: array
+        items:
+          $ref: '#/definitions/Transaction'
+  TransactionDetails:
+    type: object
+    properties:
+      id:
+        type: string
+      date:
+        type: string
+        format: date-time
+        description: The date of the transaction
+      description:
+        type: string
+        description: The description of the transaction
+      amount:
+        type: number
+        description: The amount of the transaction
+      balance:
+        type: number
+        description: The balance of the account after the transaction
+      accountId:
+        type: string
+        description: The ID of the account the transaction belongs to
+      transactionType:
+        type: string
+        description: The type of the transaction (electronic, etc.)
+      category:
+        type: string
+        description: The category of the transaction
+      notes:
+        type: string
+        description: Additional notes about the transaction
