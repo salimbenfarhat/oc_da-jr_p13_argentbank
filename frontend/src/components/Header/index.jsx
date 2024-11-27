@@ -31,21 +31,21 @@ function Header() {
         />
         <h1 className="sr-only">Argent Bank</h1>
       </Link>
-      <div>
+      <div className="header-right">
         {/* Affichage conditionnel basé sur l'état d'authentification */}
         {isAuthenticated ? (
           // Si l'utilisateur est connecté, afficher son prénom et le bouton de déconnexion
           <>
             <i className="fa fa-user-circle main-nav-item"></i>
             <span className="main-nav-item">{userFirstName}</span>
-            <NavLink className="main-nav-item" to="/login" onClick={handleLogout}>
+            <NavLink className="main-nav-active" to="/login" onClick={handleLogout}>
               <i className="fa fa-sign-out"></i> Sign Out
             </NavLink>
           </>
         ) : (
           // Sinon, afficher le lien de connexion
           <>
-            <NavLink className="main-nav-item" to="/login">
+            <NavLink className="main-nav-active" to="/login">
               <i className="fa fa-user-circle"></i> Sign In
             </NavLink>
           </>

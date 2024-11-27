@@ -2,7 +2,7 @@
 
 .main-nav {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     padding: 5px 20px;
   
@@ -31,6 +31,28 @@
             color: #2c3e50; 
         }
     } 
+
+    &-item,
+    &-active {
+        display: flex;
+        text-decoration: none;
+        gap: 5px;
+        align-items: center;
+        margin-right: 0.5rem;
+
+        &.greet {
+            font-weight: normal; 
+            color: #2c3e50; 
+        }
+    }
+
+    &-item:hover {
+        text-decoration: none;
+    }
+
+    &-active:hover {
+        text-decoration: underline;
+    }
   
     &-logo {
         display: flex;

@@ -1,13 +1,12 @@
 .main {
     background-color: #12002b;
-    height: 100vh;
+    height: auto;
     display: flex;
     flex-direction: column;
     .main-nav {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
-      padding: 5px 20px;
   
       a {
         font-weight: bold;
@@ -18,16 +17,21 @@
         }
       }
   
-      &-item {
+      &-item,
+      &-active {
         display: flex;
         text-decoration: none;
         gap: 5px;
         align-items: center;
         margin-right: 0.5rem;
-  
-        &:hover {
-          text-decoration: underline;
-        }
+      }
+
+      &-item:hover {
+        text-decoration: none;
+      }
+
+      &-active:hover {
+        text-decoration: underline;
       }
   
       &-logo {
