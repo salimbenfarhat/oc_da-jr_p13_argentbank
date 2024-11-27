@@ -1,3 +1,4 @@
+import { fetchUserThunk } from '../thunks/userProfileThunk';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { setAuthenticated } from '../slices/authSlice';
 
@@ -13,9 +14,10 @@ export const loadAuthState = createAsyncThunk(
     }
     if (token) {
       try {
+        const responseData = await dispatch(fetchUserThunk(token)).unwrap();
         // Dispatcher l'action pour mettre à jour l'état d'authentification
         dispatch(setAuthenticated(true)); 
-        return token;
+        return responseData;
       } catch (error) {
         console.error('Erreur lors du chargement de l\'état d\'authentification :', error);
         // Dispatcher l'action pour indiquer que l'utilisateur n'est pas authentifié
