@@ -16,6 +16,7 @@ import './index.scss';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Error from './components/Error';
+import Dashboard from './pages/Dashboard';
 
 import store from './redux/store'; // Importation de votre store Redux
 import PropTypes from 'prop-types';
@@ -49,6 +50,14 @@ const router = createBrowserRouter([
       {
         path: "/login",  // Route pour la page de connexion
         element: <Login onLogin={<HandleLogin />} />,
+      },
+      {
+        path: "/dashboard",  // Route pour la page du tableau de bord (accès protégé)
+        element: (
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        ),
       },
       {
         path: "erreur-404",  // Route pour afficher la page d'erreur personnalisée
