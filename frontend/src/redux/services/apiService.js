@@ -57,7 +57,8 @@ export const updateUserProfile = async (token, firstName, lastName) => {
 
   // Vérification de la réponse de l'API
   if (!response.ok) {
-    throw new Error(`Erreur lors de la mise à jour du profil. Veuillez réessayer plus tard.`);
+    const errorData = await response.json().catch(() => ({ message: `Erreur HTTP : ${response.status}` }));
+    throw new Error(errorData.message);
   }
   
   // Convertit la réponse de l'API en JSON
