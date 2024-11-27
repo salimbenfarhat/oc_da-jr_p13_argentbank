@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchUserThunk } from '../thunks/userProfileThunk';
+import { fetchUserThunk, updateUserThunk } from '../thunks/userProfileThunk';
 
 // État initial du slice de profil utilisateur.
 // firstName et lastName : contiennent les informations du prénom et du nom de l'utilisateur (null initialement).
@@ -34,6 +34,23 @@ const userProfileSlice = createSlice({
       })
       .addCase(fetchUserThunk.rejected, (state, action) => {
         // Lorsque le thunk fetchUserThunk échoue
+        state.status = 'failed';
+        state.error = action.error.message; // Récupérer le message d'erreur
+      })
+      .addCase(updateUserThunk.pending, (state) => {
+        // Lorsque le thunk updateUserThunk commence
+        state.status = 'loading';
+        state.error = null; // Réinitialisation de l'erreur
+      })
+      .addCase(updateUserThunk.fulfilled, (state, action) => {
+        // Lorsque le thunk updateUserThunk réussit
+        state.status = 'succeeded';
+        state.firstName = action.payload.body.firstName;
+        state.lastName = action.payload.body.lastName;
+        state.error = null;
+      })
+      .addCase(updateUserThunk.rejected, (state, action) => {
+        // Lorsque le thunk updateUserThunk échoue
         state.status = 'failed';
         state.error = action.error.message; // Récupérer le message d'erreur
       });
