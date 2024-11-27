@@ -3,19 +3,40 @@
 // Initialise le routeur et le store Redux, puis rend le composant principal.
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Provider } from 'react-redux'; // Importation du Provider
+import { Provider, useSelector } from 'react-redux'; // Importation du Provider
 import {
   createBrowserRouter,
-  RouterProvider
+  RouterProvider,
+  Navigate,
+  useNavigate
 } from "react-router-dom";
 
 import './index.scss';
 
 import Home from './pages/Home';
+import Login from './pages/Login';
 import Error from './components/Error';
+import Dashboard from './pages/Dashboard';
 
 import store from './redux/store'; // Importation de votre store Redux
+import PropTypes from 'prop-types';
 import reportWebVitals from './reportWebVitals';
+
+// Composant de route protégée
+const PrivateRoute = ({ children }) => {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  return isAuthenticated ? children : <Navigate to='/login' />;
+};
+
+PrivateRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+// Composant de fonction React pour la redirection après la connexion
+const HandleLogin = () => {
+  const navigate = useNavigate();
+  navigate('/dashboard'); // Redirige l'utilisateur vers la page du tableau de bord
+};
 
 const router = createBrowserRouter([
   {
@@ -25,6 +46,18 @@ const router = createBrowserRouter([
       {
         path: "/", // Route pour la page d'accueil
         element: <Home />,
+      },
+      {
+        path: "/login",  // Route pour la page de connexion
+        element: <Login onLogin={<HandleLogin />} />,
+      },
+      {
+        path: "/dashboard",  // Route pour la page du tableau de bord (accès protégé)
+        element: (
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        ),
       },
       {
         path: "erreur-404",  // Route pour afficher la page d'erreur personnalisée
